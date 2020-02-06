@@ -118,6 +118,7 @@ should be run four times on each computer with each of the four indexes.
 $Id: feov1720.cxx 128 2011-05-12 06:26:34Z alex $
  *****************************************************************************/
 
+#include "mfe.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -166,16 +167,13 @@ extern HNDLE hDB;   //!< main ODB handle
 //extern BOOL debug;  //!< debug printouts
 
 /* make frontend functions callable from the C framework */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*-- Globals -------------------------------------------------------*/
 
 //! The frontend name (client name) as seen by other MIDAS clients
-char *frontend_name = (char*)FE_NAME;
+const char *frontend_name = (char*)FE_NAME;
 //! The frontend file name, don't change it
-char *frontend_file_name = (char*)__FILE__;
+const char *frontend_file_name = (char*)__FILE__;
 //! frontend_loop is called periodically if this variable is TRUE
 BOOL frontend_call_loop = FALSE;
 //! a frontend status page is displayed with this frequency in ms
@@ -265,9 +263,6 @@ EQUIPMENT equipment[] =
     {""}
 };
 
-#ifdef __cplusplus
-}
-#endif
 
 std::vector<v1720CONET2> ov1720; //!< objects for the v1720 modules controlled by this frontend
 std::vector<v1720CONET2>::iterator itv1720;  //!< Main thread iterator
@@ -989,7 +984,7 @@ DWORD acqStat; //!< ACQUISITION STATUS reg, must be global because read by poll_
  * \return  1 if event is available, 0 if done polling (no event).
  * If test equals TRUE, don't return.
  */
-extern "C" INT poll_event(INT source, INT count, BOOL test)
+INT poll_event(INT source, INT count, BOOL test)
 {
 
   register int i;
@@ -1030,7 +1025,7 @@ extern "C" INT poll_event(INT source, INT count, BOOL test)
  *
  * \return  Midas status code
  */
-extern "C" INT interrupt_configure(INT cmd, INT source, POINTER_T adr)
+INT interrupt_configure(INT cmd, INT source, POINTER_T adr)
 {
   switch (cmd) {
   case CMD_INTERRUPT_ENABLE:

@@ -94,7 +94,7 @@ endif
 # CAENVME_DIR  = $(CONET2_DIR)/CAENVMELib-2.41
 # CAENVME_LIB  = $(CAENVME_DIR)/lib/x64
 MIDAS_INC    = $(MIDASSYS)/include
-MIDAS_LIB    = $(MIDASSYS)/$(OS_DIR)/lib
+MIDAS_LIB    = $(MIDASSYS)/lib
 MIDAS_SRC    = $(MIDASSYS)/src
 MIDAS_DRV    = $(MIDASSYS)/drivers/vme
 ROOTANA      = $(HOME)/packages/rootana
