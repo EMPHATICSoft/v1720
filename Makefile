@@ -19,8 +19,8 @@ HWLOGDIR=\"$(DEAPDIR)/FrontEnd/v1720\"
 # Hardware setup
 NBLINKSPERA3818=4 # Number of optical links used per A3818
 NBLINKSPERFE=4 # Number of optical links controlled by each frontend
-NB1720PERLINK=2 # Number of daisy-chained v1720s per optical link
-NBV1720TOTAL=32 # Number of v1720 boards in total
+NB1720PERLINK=1 # Number of daisy-chained v1720s per optical link
+NBV1720TOTAL=4 # Number of v1720 boards in total
 NBCORES=8
 
 HWFLAGS = -DUSE_SYSTEM_BUFFER=$(USE_SYSTEM_BUFFER) \

@@ -93,22 +93,6 @@ controls 2*2 = 4 v1720 boards.  Compile and run:
     ./feoV1720.exe
 
 
-\section deap DEAP-3600 notes
-
-MIDAS_SERVER_HOST should be set to deap00:7071. Otherwise frontends will require the
-option -h deap00:7071
-
-Each frontend will only access one link. To access all boards they
-should be run four times on each computer with each of the four indexes.
-
-\subsection deapusage Usage
-
-- on deap01: ./bin/feoV1720.exe -i [ 0, 1, 2, 3 ]
-- on deap02: ./bin/feoV1720.exe -i [ 4, 5, 6, 7 ]
-- on deap03: ./bin/feoV1720.exe -i [ 8, 9, 10, 11 ]
-- on deap04: ./bin/feoV1720.exe -i [ 12, 13, 14, 15 ]
-
-\subsection deapfiles Files
 
 - feoV1720.cxx : Main front-end user code
 - v1720CONET2.hxx / v1720CONET2.cxx : Driver class for the v1720 module
@@ -139,14 +123,11 @@ $Id: feov1720.cxx 128 2011-05-12 06:26:34Z alex $
 #ifndef NBLINKSPERA3818
 #define NBLINKSPERA3818   4   //!< Number of optical links used per A3818
 #define NBLINKSPERFE      4   //!< Number of optical links controlled by each frontend
-#define NB1720PERLINK     2   //!< Number of daisy-chained v1720s per optical link
-#define NBV1720TOTAL      32  //!< Number of v1720 boards in total
+#define NB1720PERLINK     1   //!< Number of daisy-chained v1720s per optical link
+#define NBV1720TOTAL      4  //!< Number of v1720 boards in total
 #define NBCORES           8   //!< Number of cpu cores, for process/thread locking
 #endif
 
-#ifndef HWLOGDIR
-#define HWLOGDIR "/home/deap/pro/FrontEnd/v1720"
-#endif
 
 #define SLEEP_TIME_BETWEEN_CONNECTS 50 // in milliseconds
 
@@ -181,9 +162,9 @@ BOOL frontend_call_loop = FALSE;
 //! a frontend status page is displayed with this frequency in ms
 INT display_period = 000;
 //! maximum event size produced by this frontend
-INT max_event_size = 32 * 222800;
+INT max_event_size = 32 * 22280;
 //! maximum event size for fragmented events (EQ_FRAGMENTED)
-INT max_event_size_frag = 5 * 1024 * 1024;
+INT max_event_size_frag = 1024 * 1024;
 //! buffer size to hold events
 INT event_buffer_size = 30 * max_event_size + 10000;
 //! log of hardware status
@@ -326,7 +307,7 @@ INT frontend_init(){
   {
     // Reset the PLL lock loss flag in ODB
     char Path[255];
-    sprintf(Path,"/DEAP Alarm/PLL Loss FE0%d",get_frontend_index());
+    sprintf(Path,"/V1720 Alarm/PLL Loss FE0%d",get_frontend_index());
     INT dummy;
     int size=sizeof(INT);
     db_get_value(hDB, 0, Path, &(dummy), &size, TID_INT, true);
@@ -535,7 +516,7 @@ INT begin_of_run(INT run_number, char *error){
   {
     // Reset the PLL lock loss flag in ODB
     char Path[255];
-    sprintf(Path,"/DEAP Alarm/PLL Loss FE0%d",get_frontend_index());
+    sprintf(Path,"/V1720 Alarm/PLL Loss FE0%d",get_frontend_index());
     INT dummy = -1;
     db_set_value(hDB, 0, Path, &(dummy), sizeof(INT), 1, TID_INT);
   }
@@ -1369,7 +1350,7 @@ INT read_buffer_level(char *pevent, INT off) {
   // Set ODB flag if PLL lock lost
   if (PLLLockLossID > -1){
     char Path[255];
-    sprintf(Path,"/DEAP Alarm/PLL Loss FE0%d",get_frontend_index());
+    sprintf(Path,"/V1720 Alarm/PLL Loss FE0%d",get_frontend_index());
     db_set_value(hDB, 0, Path, &(PLLLockLossID), sizeof(INT), 1, TID_INT);
     // PLL loss lock reset by the VME_STATUS read!
   }
